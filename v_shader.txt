@@ -1,0 +1,30 @@
+#version 330 core
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec3 aNormal;
+
+
+out vec3 world_normal;
+out vec3 frag_pos;
+out vec4 frag_pos_ls;
+out vec3 cam_pos;
+
+
+uniform vec3 camera_pos;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 perspective;
+
+uniform mat4 light_transform;
+
+
+void main() {
+    gl_Position = perspective * view * model * vec4(aPos, 1.0f);
+	world_normal = normalize(mat3(transpose(inverse(model))) * aNormal);
+	frag_pos = (model * vec4(aPos, 1.0)).xyz;
+	cam_pos = camera_pos;
+
+	frag_pos_ls = light_transform * model * vec4(aPos, 1.0f);
+}
+
+
